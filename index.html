@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Be My Valentine 💘</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 32px;
+      border-radius: 20px;
+      text-align: center;
+      width: 90vw;
+      max-width: 420px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+      z-index: 2;
+    }
+
+    h2 {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .subtext {
+      font-size: 16px;
+      color: #6b7280;
+    }
+
+    .buttons {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: relative;
+    }
+
+    button {
+      padding: 16px;
+      font-size: 20px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .yes-button {
+      background: #ff4d6d;
+      color: white;
+    }
+
+    .no-button {
+      background: #e5e7eb;
+      color: black;
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: absolute;
+      animation: floatUp 6s linear forwards;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(100vh);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-10vh);
+        opacity: 0;
+      }
+    }
+
+    /* Confetti */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      animation: fall 3s linear forwards;
+    }
+
+    @keyframes fall {
+      from {
+        transform: translateY(-10vh) rotate(0deg);
+      }
+      to {
+        transform: translateY(110vh) rotate(720deg);
+      }
+    }
+
+    /* Desktop improvements */
+    @media (min-width: 768px) {
+      .buttons {
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      button {
+        padding: 14px 30px;
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <h2>Will you be my Valentine? 💖</h2>
+    <div class="subtext">Be honest… but choose wisely 😌</div>
+
+    <div class="buttons">
+      <button class="yes-button" onclick="handleYesClick()">Yes 💕</button>
+      <button class="no-button" onclick="handleNoClick()">No</button>
+    </div>
+  </div>
+
+  <script>
+    let noCount = 0;
+
+    const noMessages = [
+      "No",
+      "Are you sure?",
+      "Really sure?",
+      "Think again 😐",
+      "That hurt 😢",
+      "My heart 💔",
+      "Please reconsider 🥺",
+      "I’m begging now 😭",
+      "You’re still saying no?",
+      "Yes is right there 👉❤️"
+    ];
+
+    function handleNoClick() {
+      const noBtn = document.querySelector('.no-button');
+      const yesBtn = document.querySelector('.yes-button');
+
+      noBtn.textContent =
+        noMessages[Math.min(noCount + 1, noMessages.length - 1)];
+      noCount++;
+
+      // Keep movement phone-safe
+      const x = Math.random() * 80 - 40;
+      const y = Math.random() * 60 - 30;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+
+      // Grow Yes button
+      const currentSize = parseFloat(
+        window.getComputedStyle(yesBtn).fontSize
+      );
+      yesBtn.style.fontSize = `${currentSize * 1.15}px`;
+
+      if (navigator.vibrate) {
+        navigator.vibrate(100);
+      }
+    }
+
+    function handleYesClick() {
+      if (navigator.vibrate) {
+        navigator.vibrate([200, 100, 200, 100, 300]);
+      }
+
+      launchConfetti();
+
+      document.body.innerHTML = `
+        <div style="color:white;text-align:center;">
+          <h1 style="font-size:36px;">YAYYYY 💘🎉</h1>
+          <h2>You chose wisely ❤️</h2>
+          <p>Happy Valentine’s Day 🌹</p>
+          <h3 style="margin-top:30px;">
+            Zander ❤️ Supergirl
+          </h3>
+        </div>
+      `;
+    }
+
+    // Floating hearts
+    setInterval(() => {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = '💖';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.fontSize = Math.random() * 18 + 16 + 'px';
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 6000);
+    }, 500);
+
+    function launchConfetti() {
+      for (let i = 0; i < 120; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor =
+          `hsl(${Math.random() * 360}, 100%, 60%)`;
+        document.body.appendChild(confetti);
+
+        setTimeout(() => confetti.remove(), 3000);
+      }
+    }
+  </script>
+
+</body>
+</html>
